@@ -2,6 +2,8 @@ package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -9,6 +11,8 @@ import java.util.*;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
+    private StudentService studentService;
+
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -36,5 +40,9 @@ public class StudentService {
     }
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
+    }
+    @GetMapping("/age")
+    public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        return studentService.getStudentsByAgeBetween(min, max);
     }
 }

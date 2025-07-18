@@ -3,7 +3,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.service.FacultyService;
+import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,10 +14,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/faculty")
 public class FacultyController {
     private final FacultyService facultyService;
+    private final StudentService studentService;
     @Autowired
-    public FacultyController(FacultyService facultyService) {
+    public FacultyController(FacultyService facultyService, StudentService studentService) {
         this.facultyService = facultyService;
+        this.studentService = studentService;
     }
+    @Autowired
+    private FacultyRepository facultyRepository;
     @PostMapping
     public Faculty createFaculty(@RequestParam Long id, @RequestParam String name, @RequestParam String color) {
         return facultyService.addFaculty(id, name, color);
@@ -40,5 +47,13 @@ public class FacultyController {
                 .stream()
                 .filter(faculty -> faculty.getColor().equalsIgnoreCase(color))
                 .collect(Collectors.toList());
+    }
+    @GetMapping("/students/age")
+    public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        return studentService.getStudentsByAgeBetween(min, max);
+    }
+    @GetMapping("/search")
+    public List<Faculty> searchFaculties(@RequestParam String filter) {
+        return facultyService.findByNameOrColorIgnoreCase(filter);
     }
 }

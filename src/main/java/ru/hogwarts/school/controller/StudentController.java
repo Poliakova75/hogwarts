@@ -41,4 +41,8 @@ public class StudentController {
                 .filter(student -> student.getAge() == age)
                 .collect(Collectors.toList());
     }
+    @GetMapping("/age")
+    public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        return studentService.getStudentsByAgeBetween(min, max);
+    }
 }
