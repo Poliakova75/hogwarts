@@ -10,6 +10,7 @@ public class Student {
     private Long id;
     private String name;
     private int age;
+
     public Student() {
     }
     public Student(Long id, String name, int age) {
@@ -20,12 +21,15 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
+
     public Long getId() {
         return id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
@@ -43,7 +47,7 @@ public class Student {
         return null;
     }
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         return false;
     }
     @Override

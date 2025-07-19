@@ -45,7 +45,7 @@ public class FacultyController {
     public List<Faculty> filterFacultiesByColor(@PathVariable String color) {
         return facultyService.getAllFaculties()
                 .stream()
-                .filter(faculty -> faculty.getColor().equalsIgnoreCase(color))
+                .filter(faculty -> faculty.setColor("red").equalsIgnoreCase(color))
                 .collect(Collectors.toList());
     }
     @GetMapping("/students/age")
