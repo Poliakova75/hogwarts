@@ -17,7 +17,7 @@ public class Student {
         this.name = name;
         this.age = age;
     }
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
     public Long getId() {
@@ -40,11 +40,19 @@ public class Student {
     }
     @Override
     public String toString() {
-        return null;
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", faculty=" + (faculty != null ? faculty.getName() : "null") +
+                '}';
     }
     @Override
     public boolean equals(Object o){
-        return false;
+        if (this == o) return true;
+        if (!(o instanceof Student)) return false;
+        Student student = (Student) o;
+        return age == student.age && Objects.equals(id, student.id) && Objects.equals(name, student.name);
     }
     @Override
     public int hashCode() {

@@ -1,11 +1,13 @@
 package ru.hogwarts.school.controller;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.exeption.StudentNotFoundException;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/students")
@@ -16,23 +18,28 @@ public class StudentController {
         this.studentService = studentService;
     }
     @PostMapping
-    public Student createStudent(@RequestParam Long id, @RequestParam String name, @RequestParam int age) {
-        return studentService.addStudent(id, name, age);
+    public Optional<Student> createStudent(@RequestParam Long id, @RequestParam String name, @RequestParam int age) {
+        return Optional.ofNullable(studentService.addStudent(id, name, age));
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
-        Student student = studentService.getStudent(id);
-        return student != null ? ResponseEntity.ok(student) : ResponseEntity.notFound().build();
+    public Student getStudent(@PathVariable Long id) {
+        return studentService.getStudent(id)
+                .orElseThrow(() -> new StudentNotFoundException(id));
     }
     @PutMapping("/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestParam String name, @RequestParam int age) {
+    public Student updateStudent(@PathVariable Long id, @RequestParam String name, @RequestParam int age) {
         Student updatedStudent = studentService.updateStudent(id, name, age);
-        return updatedStudent != null ? ResponseEntity.ok(updatedStudent) : ResponseEntity.notFound().build();
+        if (updatedStudent == null) {
+            throw new StudentNotFoundException(id);
+        }
+        return updatedStudent;
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return ResponseEntity.noContent().build();
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable Long id) {
+        if (!studentService.deleteStudent(id)) {
+            throw new StudentNotFoundException(id);
+        }
     }
     @GetMapping("/filterByAge/{age}")
     public List<Student> filterStudentsByAge(@PathVariable int age) {

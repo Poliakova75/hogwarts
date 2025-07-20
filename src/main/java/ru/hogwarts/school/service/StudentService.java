@@ -21,9 +21,9 @@ public class StudentService {
         Student student = new Student(id, name, age);
         return studentRepository.save(student);
     }
-    public Student getStudent(Long id) {
+    public Optional<Student> getStudent(Long id) {
         Optional<Student> student = studentRepository.findById(id);
-        return student.orElse(null);
+        return studentRepository.findById(id);
     }
     public Student updateStudent(Long id, String name, int age) {
         Optional<Student> studentOpt = studentRepository.findById(id);
@@ -35,8 +35,9 @@ public class StudentService {
         }
         return null;
     }
-    public void deleteStudent(Long id) {
+    public boolean deleteStudent(Long id) {
         studentRepository.deleteById(id);
+        return false;
     }
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
