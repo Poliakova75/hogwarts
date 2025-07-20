@@ -35,4 +35,7 @@ public class Faculty {
         this.color = color;
         return color;
     }
+    public String getColor() {
+        return color;
+    }
 }
