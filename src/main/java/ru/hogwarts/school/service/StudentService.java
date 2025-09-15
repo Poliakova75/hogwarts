@@ -1,18 +1,14 @@
 package ru.hogwarts.school.service;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
-
 import java.util.*;
 @Service
 public class StudentService {
     private final StudentRepository studentRepository;
-    private StudentService studentService;
-
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -22,7 +18,6 @@ public class StudentService {
         return studentRepository.save(student);
     }
     public Optional<Student> getStudent(Long id) {
-        Optional<Student> student = studentRepository.findById(id);
         return studentRepository.findById(id);
     }
     public Student updateStudent(Long id, String name, int age) {
@@ -36,7 +31,10 @@ public class StudentService {
         return null;
     }
     public boolean deleteStudent(Long id) {
-        studentRepository.deleteById(id);
+        if (studentRepository.existsById(id)) {
+            studentRepository.deleteById(id);
+            return true;
+        }
         return false;
     }
     public List<Student> getAllStudents() {
@@ -44,6 +42,6 @@ public class StudentService {
     }
     @GetMapping("/age")
     public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
-        return studentService.getStudentsByAgeBetween(min, max);
+        return studentRepository.findByAgeBetween(min, max);
     }
 }

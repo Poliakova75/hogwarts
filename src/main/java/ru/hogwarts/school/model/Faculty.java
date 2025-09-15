@@ -1,11 +1,6 @@
 package ru.hogwarts.school.model;
-
 import jakarta.persistence.*;
-
 import java.util.List;
-
-import static jakarta.persistence.CascadeType.*;
-
 @Entity
 public class Faculty {
     @Id
@@ -22,7 +17,6 @@ public class Faculty {
     }
     @OneToMany()
     private List<Student> students;
-
     public Long getId() {
         return id;
     }
