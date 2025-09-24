@@ -21,7 +21,7 @@ public class StudentController {
     }
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id) {
-        return studentService.getStudent(id).orElse(null); // Вернем null, если студент не найден
+        return studentService.getStudent(id).orElse(null);
     }
     @PutMapping("/{id}")
     public Student updateStudent(@PathVariable Long id, @RequestParam String name, @RequestParam int age) {
@@ -42,5 +42,17 @@ public class StudentController {
     @GetMapping("/age")
     public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
         return studentService.getStudentsByAgeBetween(min, max);
+    }
+    @GetMapping("/count")
+    public long getTotalStudents() {
+        return studentService.getTotalStudents();
+    }
+    @GetMapping("/average-age")
+    public Double getAverageAge() {
+        return studentService.getAverageAge();
+    }
+    @GetMapping("/last-five")
+    public List<Student> getLastFiveStudents() {
+        return studentService.getLastFiveStudents();
     }
 }

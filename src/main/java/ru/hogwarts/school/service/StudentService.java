@@ -44,4 +44,14 @@ public class StudentService {
     public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
         return studentRepository.findByAgeBetween(min, max);
     }
+    public Double getAverageAge() {
+        return studentRepository.findAverageAge();
+    }
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.findTop5ByOrderByIdDesc();
+    }
+    public long getTotalStudents() {
+        return studentRepository.countAllStudents();
+    }
 }
+

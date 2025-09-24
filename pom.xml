@@ -73,6 +73,11 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>6.6.13.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>6.2.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
