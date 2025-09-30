@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+        id: 1
+        author: Poliakova75
+        changes:
+          - include:
+              file: lesson-three.yaml
+
+  - include:
+      file: db/changelog/student.sql
+
+  - include:
+      file: db/changelog/faculty.sql
+

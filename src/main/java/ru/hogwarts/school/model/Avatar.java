@@ -1,16 +1,14 @@
 package ru.hogwarts.school.model;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
 @Entity
 public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String imageUrl; //для URL аватарки
+    private String imageUrl;
     public Avatar() {
     }
     public Avatar(String imageUrl) {
