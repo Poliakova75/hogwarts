@@ -59,4 +59,12 @@ public class FacultyService {
         logger.info("Was invoked method getAllFaculties");
         return facultyRepository.findAll();
     }
+    public String getLongestFacultyName() {
+        logger.info("Fetching the longest faculty name");
+        List<Faculty> faculties = facultyRepository.findAll();
+        return faculties.stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("Нет факультетов");
+    }
 }

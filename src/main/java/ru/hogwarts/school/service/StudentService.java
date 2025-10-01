@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 import java.util.*;
+import java.util.stream.Collectors;
+
 @Service
 public class StudentService {
     private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
@@ -68,6 +70,31 @@ public class StudentService {
     public long getTotalStudents() {
         logger.info("Counting total number of students");
         return studentRepository.countAllStudents();
+    }
+    public List<String> getStudentNamesStartingWithA() {
+        logger.info("Fetching student names starting with 'A'");
+        List<Student> students = studentRepository.findAll();
+        return students.stream()
+                .map(Student::getName)
+                .filter(name -> name.startsWith("A"))
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+    public double getAverageAgeOfStudents() {
+        if (logger.isInfoEnabled()) {
+            logger.info("Calculating average age of students");
+        }
+        List<Student> students = studentRepository.findAll();
+        return students.stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0);
+    }
+    public int calculateSum() {
+        logger.info("Calculating sum of numbers from 1 to 1,000,000");
+        int n = 1_000_000;
+        return n * (n + 1) / 2;
     }
 }
 

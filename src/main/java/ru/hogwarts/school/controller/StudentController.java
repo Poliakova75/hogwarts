@@ -55,4 +55,16 @@ public class StudentController {
     public List<Student> getLastFiveStudents() {
         return studentService.getLastFiveStudents();
     }
+    @GetMapping("/students/names/startwitha")
+    public List<String> getStudentNamesStartingWithA() {
+        return studentService.getStudentNamesStartingWithA();
+    }
+    @GetMapping("/students/average-age")
+    public double getAverageStudentAge() {
+        return studentService.getAverageAge();
+    }
+    @GetMapping("/calculate/sum")
+    public int getSum(StudentService calculationService) {
+        return calculationService.calculateSum();
+    }
 }
