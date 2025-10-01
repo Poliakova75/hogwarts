@@ -1,4 +1,6 @@
 package ru.hogwarts.school.service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,49 +10,63 @@ import ru.hogwarts.school.repository.StudentRepository;
 import java.util.*;
 @Service
 public class StudentService {
+    private static final Logger logger = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
     @Autowired
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
-    public Student addStudent(Long id, String name, int age) {
+    public Student addStudent(Long id, String name, int age){
+    logger.info("Adding student with id: {}, name: {}, age: {}", id, name, age);
         Student student = new Student(id, name, age);
         return studentRepository.save(student);
     }
-    public Optional<Student> getStudent(Long id) {
+    public Optional<Student> getStudent(Long id){
+        logger.info("Getting student with id: {}", id);
         return studentRepository.findById(id);
     }
-    public Student updateStudent(Long id, String name, int age) {
+    public Student updateStudent(Long id, String name, int age){
+        logger.info("Updating student with id: {}", id);
         Optional<Student> studentOpt = studentRepository.findById(id);
         if (studentOpt.isPresent()) {
             Student student = studentOpt.get();
             student.setName(name);
             student.setAge(age);
+            logger.info("Updated student with id: {}", id);
             return studentRepository.save(student);
         }
+        logger.warn("Attempted to update non-existing student with id: {}", id);
         return null;
     }
     public boolean deleteStudent(Long id) {
+        logger.info("Deleting student with id: {}", id);
         if (studentRepository.existsById(id)) {
             studentRepository.deleteById(id);
+            logger.info("Deleted student with id: {}", id);
             return true;
         }
+        logger.warn("Attempted to delete non-existing student with id: {}", id);
         return false;
     }
     public List<Student> getAllStudents() {
+        logger.info("Getting all students");
         return studentRepository.findAll();
     }
     @GetMapping("/age")
     public List<Student> getStudentsByAgeBetween(@RequestParam int min, @RequestParam int max) {
+        logger.info("Getting students with age between {} and {}", min, max);
         return studentRepository.findByAgeBetween(min, max);
     }
     public Double getAverageAge() {
+        logger.info("Calculating average age of students");
         return studentRepository.findAverageAge();
     }
     public List<Student> getLastFiveStudents() {
+        logger.info("Getting last five students");
         return studentRepository.findTop5ByOrderByIdDesc();
     }
     public long getTotalStudents() {
+        logger.info("Counting total number of students");
         return studentRepository.countAllStudents();
     }
 }
