@@ -6,6 +6,9 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/students")
@@ -14,6 +17,64 @@ public class StudentController {
     @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+    }
+    private synchronized void printStudentName(String name) {
+        System.out.println(name);
+    }
+    @GetMapping("/print-synchronized")
+    public void printStudentNamesSynchronized() {
+        List<Student> students = studentService.getAllStudents();
+        if (students.size() < 6) {
+            System.out.println("Недостаточно студентов для выполнения задачи.");
+            return;
+        }
+        printStudentName(students.get(0).getName());
+        printStudentName(students.get(1).getName());
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+            printStudentName(students.get(2).getName());
+            printStudentName(students.get(3).getName());
+        }, executorService);
+
+        CompletableFuture<Void> future2 = CompletableFuture.runAsync(() -> {
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        }, executorService);
+
+
+        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(future1, future2);
+        combinedFuture.join();
+
+        executorService.shutdown();
+    }
+    @GetMapping("/print-parallel")
+    public void printStudentNamesInParallel() {
+        List<Student> students = studentService.getAllStudents();
+        if (students.size() < 6) {
+            System.out.println("Недостаточно студентов для выполнения задачи.");
+            return;
+        }
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        }, executorService);
+
+        CompletableFuture<Void> future2 = CompletableFuture.runAsync(() -> {
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        }, executorService);
+
+        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(future1, future2);
+        combinedFuture.join();
+
+        executorService.shutdown();
     }
     @PostMapping
     public Optional<Student> createStudent(@RequestParam Long id, @RequestParam String name, @RequestParam int age) {
